@@ -46,7 +46,7 @@ public class PlayerScript : MonoBehaviour {
                 // }
             } else if (Input.GetButton("Fire")) {
                 Vector2 wallPos = playerRb.position + Vector2.Scale(facing, gridSize);
-                wallPos += new Vector2(-0.36f, 1.11f);
+                wallPos += new Vector2(-0.36f, 0.72f);
                 Instantiate(wallPrefab, wallPos, new Quaternion());
             } else if (v != 0 || h != 0) {
                 Vector2 move;
