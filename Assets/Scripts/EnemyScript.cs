@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyScript : MonoBehaviour {
     public bool busy = false;
+    public bool canGoThroughWalls = false;
 
     private PlayerScript playerScript;
     private Rigidbody2D enemyRb;
@@ -44,7 +45,7 @@ public class EnemyScript : MonoBehaviour {
         Vector2Int[] possibleMovements = {new Vector2Int(-1, 0), new Vector2Int(1, 0), new Vector2Int(0, -1), new Vector2Int(0, 1)};
         foreach (Vector2Int current in possibleMovements) {
             int currentScore = 0;
-            if (walls.Contains(current)) {
+            if (walls.Contains(current) && !canGoThroughWalls) {
                 continue;
             }
             Vector2Int newLoc = GetEnemyLocation() + current;

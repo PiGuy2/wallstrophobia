@@ -195,7 +195,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1053937479
-  m_SortingLayer: 9
+  m_SortingLayer: 6
   m_SortingOrder: 0
   m_Sprite: {fileID: -2311659948842064771, guid: 7d63a530be0d34040b06aae23c2f1bde,
     type: 3}
@@ -244,6 +244,8 @@ MonoBehaviour:
   wallPrefab: {fileID: 316000075523091056, guid: 1a5b741d920851aae8d2e12b20a96041,
     type: 3}
   basicEnemyPrefab: {fileID: 6958556415357383283, guid: 1ff4733c7772b28b0bb502c67f4f24a4,
+    type: 3}
+  gahstEnemyPrefab: {fileID: 6958556415357383283, guid: 974422e8a06bd9400ba44816ca09e218,
     type: 3}
   killCount: 0
   wallLocations: []

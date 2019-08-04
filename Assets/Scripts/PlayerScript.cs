@@ -13,6 +13,7 @@ public class PlayerScript : MonoBehaviour {
 
     public GameObject wallPrefab;
     public GameObject basicEnemyPrefab;
+    public GameObject gahstEnemyPrefab;
     
     private Rigidbody2D playerRb;
     private Animator playerAnimator;
@@ -26,7 +27,7 @@ public class PlayerScript : MonoBehaviour {
     private bool death = false;
     private float deathTime;
 
-    private bool enemyTurn = false;
+    private bool enemyTurn = true;
     private int enemyTurnStep = 0;
 
     private Transform highlight;
@@ -35,6 +36,8 @@ public class PlayerScript : MonoBehaviour {
 
     public List<Vector2Int> wallLocations;
     public List<EnemyScript> enemies;
+
+    private int initialSpawns = 2;
 
     // Start is called before the first frame update
     void Start () {
@@ -104,7 +107,7 @@ public class PlayerScript : MonoBehaviour {
                 }
             } else {
                 // Spawn a new enemy
-                if (Random.Range(0, 3) == 0) {
+                if (Random.Range(0, 3) == 0 || initialSpawns > 0) {
                     List<Vector2Int> spawnLocations = new List<Vector2Int>();
                     Vector2Int playerLoc = GetPlayerLocation();
                     for (int x = 0; x < gridSize.x; x++) {
@@ -119,9 +122,18 @@ public class PlayerScript : MonoBehaviour {
                     Vector2Int enemyLocation = spawnLocations[Random.Range(0, spawnLocations.Count)];
                     Vector2 enemyPos = GridLocationToCoordinates(enemyLocation) + new Vector2(1.1f, 1.12f);
                     
-                    EnemyScript newEnemy = Instantiate(basicEnemyPrefab, enemyPos, new Quaternion()).GetComponent<EnemyScript>();
+                    EnemyScript newEnemy;
+
+                    if (Random.Range(0, 3) == 0 && killCount > 5) {
+                        newEnemy = Instantiate(gahstEnemyPrefab, enemyPos, new Quaternion()).GetComponent<EnemyScript>();
+                        newEnemy.canGoThroughWalls = true;
+                    } else {
+                        newEnemy = Instantiate(basicEnemyPrefab, enemyPos, new Quaternion()).GetComponent<EnemyScript>();
+                    }
+
                     newEnemy.SetPS(this);
                     enemies.Add(newEnemy);
+                    initialSpawns--;
                 }
                 enemyTurnStep = 0;
                 enemyTurn = false;
