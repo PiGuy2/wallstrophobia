@@ -11,6 +11,8 @@ public class PlayerScript : MonoBehaviour {
     public float gridMoveTime = 0.2f;
 
     public GameObject wallPrefab;
+
+    public GameObject basicEnemyPrefab;
     
     private Rigidbody2D playerRb;
 
@@ -52,10 +54,10 @@ public class PlayerScript : MonoBehaviour {
         }
 
         // See if square character is looking at is in the grid
-        Vector2Int facingLoc = CoordinatesToGridLocation(playerRb.position + Vector2.Scale(facing, gridSpace));
+        Vector2Int facingLoc = GetPlayerLocation() + facing;
         Vector2Int facingLocClamped = facingLoc;
         facingLocClamped.Clamp(new Vector2Int(0, 0), gridSize - new Vector2Int(1, 1));
-        if (facingLoc != facingLocClamped) {
+        if (facingLoc != facingLocClamped || wallLocations.Contains(facingLoc)) {
             highlight.gameObject.SetActive(false);
         } else {
             highlight.gameObject.SetActive(true);
@@ -64,22 +66,37 @@ public class PlayerScript : MonoBehaviour {
         bool turn = false;
         if (gridMove) {
             if (enemyTurn) {
-                Debug.Log("Enemy Turn");
+                if (Random.Range(0, 5) == 0) {
+                    // Spawn a new enemy
+                    List<Vector2Int> spawnLocations = new List<Vector2Int>();
+                    Vector2Int playerLoc = GetPlayerLocation();
+                    for (int x = 0; x < gridSize.x; x++) {
+                        for (int y = 0; y < gridSize.y; y++) {
+                            if (Mathf.Abs(x - playerLoc.x) + Mathf.Abs(y - playerLoc.y) > 2) {
+                                if (!wallLocations.Contains(new Vector2Int(x, y))) {
+                                    spawnLocations.Add(new Vector2Int(x, y));
+                                }
+                            }
+                        }
+                    }
+                    Vector2Int enemyLocation = spawnLocations[Random.Range(0, spawnLocations.Count)];
+                    Vector2 enemyPos = GridLocationToCoordinates(enemyLocation) + new Vector2(1.1f, 1.12f);
+                    Instantiate(basicEnemyPrefab, enemyPos, new Quaternion());
+                }
                 enemyTurn = false;
             } else if (collisionDetected) {
                 // If player ran into a wall
                 endPos = startPos;
                 collisionDetected = false;
-            }
-            if (playerRb.position != endPos) {
+            } else if (playerRb.position != endPos) {
                 // If player is moving
                 playerRb.position = Vector2.MoveTowards(playerRb.position, endPos, 0.2f);
             } else if (Input.GetButtonDown("Place Wall") && highlight.gameObject.activeSelf) {
                 // If player is placing wall
                 Vector2Int wallLoc = GetPlayerLocation() + facing;
                 wallLocations.Add(wallLoc);
-                Vector2 wallPos = Vector2.Scale(wallLoc, gridSpace);
-                wallPos += new Vector2(-0.11f, 0.72f) + gridOrigin;
+                Vector2 wallPos = GridLocationToCoordinates(wallLoc);
+                wallPos += new Vector2(0.84f, 2.4f);
                 Instantiate(wallPrefab, wallPos, new Quaternion());
                 turn = true;
             } else if (v != 0 || h != 0) {
@@ -116,7 +133,7 @@ public class PlayerScript : MonoBehaviour {
     }
 
     Vector2Int GetPlayerLocation () {
-        return CoordinatesToGridLocation(gameObject.transform.position);
+        return CoordinatesToGridLocation(gameObject.transform.position - new Vector3(0, 1, 0));
     }
 
     Vector2Int CoordinatesToGridLocation (Vector2 coords) {
@@ -124,5 +141,11 @@ public class PlayerScript : MonoBehaviour {
         Vector2 pos = Vector2.Scale(coords, scaleFactor);
         pos -= Vector2.Scale(gridOrigin, scaleFactor);
         return Vector2Int.RoundToInt(pos);
+    }
+
+    Vector2 GridLocationToCoordinates (Vector2Int loc) {
+        Vector2 pos = Vector2.Scale(loc, gridSpace);
+        pos += gridOrigin;
+        return pos;
     }
 }
