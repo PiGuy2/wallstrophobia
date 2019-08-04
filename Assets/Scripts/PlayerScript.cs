@@ -15,6 +15,8 @@ public class PlayerScript : MonoBehaviour {
     public GameObject basicEnemyPrefab;
     public GameObject gahstEnemyPrefab;
     public GameObject bombEnemyPrefab;
+
+    public AudioScript audioScript;
     
     private Rigidbody2D playerRb;
     private Animator playerAnimator;
