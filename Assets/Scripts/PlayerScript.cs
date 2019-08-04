@@ -107,7 +107,7 @@ public class PlayerScript : MonoBehaviour {
                 }
             } else {
                 // Spawn a new enemy
-                if (Random.Range(0, 3) == 0 || initialSpawns > 0) {
+                if (Random.Range(0, Mathf.Max(10, 80 - killCount)) < 20 || initialSpawns > 0) {
                     List<Vector2Int> spawnLocations = new List<Vector2Int>();
                     Vector2Int playerLoc = GetPlayerLocation();
                     for (int x = 0; x < gridSize.x; x++) {
@@ -124,7 +124,7 @@ public class PlayerScript : MonoBehaviour {
                     
                     EnemyScript newEnemy;
 
-                    if (Random.Range(0, 3) == 0 && killCount > 5) {
+                    if (Random.Range(0, Mathf.Max(20, 90 - Mathf.Max(killCount - 30, 0))) < 30 && killCount > 5) {
                         newEnemy = Instantiate(gahstEnemyPrefab, enemyPos, new Quaternion()).GetComponent<EnemyScript>();
                         newEnemy.canGoThroughWalls = true;
                     } else {
