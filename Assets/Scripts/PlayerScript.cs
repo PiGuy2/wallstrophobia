@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerScript : MonoBehaviour {
     public float moveSpeed = 0.3f;
@@ -23,6 +24,7 @@ public class PlayerScript : MonoBehaviour {
 
     private bool collisionDetected = false;
     private bool death = false;
+    private float deathTime;
 
     private bool enemyTurn = false;
     private int enemyTurnStep = 0;
@@ -75,7 +77,9 @@ public class PlayerScript : MonoBehaviour {
 
         bool turn = false;
         if (death) {
-            // Wait
+            if (Time.time > deathTime + 5) {
+                SceneManager.LoadScene("Main");
+            }
         } else if (enemyTurn) {
             if (enemyTurnStep == 0) {
                 foreach (EnemyScript enemy in enemies) {
@@ -185,7 +189,7 @@ public class PlayerScript : MonoBehaviour {
 
     void OnTriggerEnter2D (Collider2D trigger) {
         playerAnimator.SetBool("Death", true);
-        Invoke("SceneManager.LoadScene(\"Main\")", 5);
+        deathTime = Time.time;
         death = true;
     }
 
