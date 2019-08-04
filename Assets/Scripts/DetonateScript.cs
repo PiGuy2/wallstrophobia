@@ -5,6 +5,8 @@ using UnityEngine;
 public class DetonateScript : MonoBehaviour {
     private bool detonated;
     private Time detonateTime;
+
+    public float secondsToWait = 2f;
     
     // Start is called before the first frame update
     void Start() {
@@ -14,7 +16,7 @@ public class DetonateScript : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         if (detonated) {
-            if (detonateTime + 2 < Time.time) {
+            if (detonateTime + secondsToWait < Time.time) {
                 GameObject.Destroy(this);
             }
         }
