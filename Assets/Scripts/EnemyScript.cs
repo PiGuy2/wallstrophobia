@@ -25,6 +25,8 @@ public class EnemyScript : MonoBehaviour {
         } else {
             busy = false;
         }
+
+        GetComponent<SpriteRenderer>().sortingLayerID = playerScript.GetSortingLayer(GetEnemyLocation().y);
     }
     
     public void SetPS (PlayerScript pS) {
