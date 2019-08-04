@@ -32,7 +32,7 @@ public class PlayerScript : MonoBehaviour {
 
     private Transform highlight;
 
-    public int killCount;
+    public int gameScore;
 
     public List<Vector2Int> wallLocations;
     public List<EnemyScript> enemies;
@@ -52,7 +52,7 @@ public class PlayerScript : MonoBehaviour {
         wallLocations = new List<Vector2Int>();
         enemies = new List<EnemyScript>();
 
-        killCount = 0;
+        gameScore = 0;
     }
 
     // Update is called once per frame
@@ -107,7 +107,8 @@ public class PlayerScript : MonoBehaviour {
                 }
             } else {
                 // Spawn a new enemy
-                if (Random.Range(0, Mathf.Max(10, 80 - killCount)) < 20 || initialSpawns > 0) {
+                // Starts at 1/4 and reaches 1/1 @ 60 kills
+                if (Random.Range(0, Mathf.Max(10, 80 - gameScore)) < 20 || initialSpawns > 0) {
                     List<Vector2Int> spawnLocations = new List<Vector2Int>();
                     Vector2Int playerLoc = GetPlayerLocation();
                     for (int x = 0; x < gridSize.x; x++) {
@@ -124,7 +125,8 @@ public class PlayerScript : MonoBehaviour {
                     
                     EnemyScript newEnemy;
 
-                    if (Random.Range(0, Mathf.Max(20, 90 - Mathf.Max(killCount - 30, 0))) < 30 && killCount > 5) {
+                    // Starts at 1/3. Starts increasing @ 30 kills, maxes out at 1/1 @ 90 kills
+                    if (Random.Range(0, Mathf.Max(20, 90 - Mathf.Max(gameScore - 30, 0))) < 30 && gameScore > 5) {
                         newEnemy = Instantiate(gahstEnemyPrefab, enemyPos, new Quaternion()).GetComponent<EnemyScript>();
                         newEnemy.canGoThroughWalls = true;
                     } else {
@@ -159,9 +161,12 @@ public class PlayerScript : MonoBehaviour {
             for (int i = enemies.Count - 1; i >= 0; i--) {
                 EnemyScript enemy = enemies[i];
                 if (enemy.GetEnemyLocation() == wallLoc) {
+                    if (enemy.canGoThroughWalls) {
+                        gameScore++;
+                    }
                     enemies.Remove(enemy);
                     GameObject.Destroy(enemy.gameObject);
-                    killCount += 1;
+                    gameScore += 1;
                 }
             }
 
@@ -190,12 +195,12 @@ public class PlayerScript : MonoBehaviour {
 
         highlight.localPosition = new Vector2(0.1535f, -0.463f) + Vector2.Scale(facing, gridSpace);
 
-        if (killCount == 0) {
-            GameObject.Find("Score Text").GetComponent<Text>().text = "No Kills";
-        } else if (killCount == 1) {
-            GameObject.Find("Score Text").GetComponent<Text>().text = "1 Kill";
+        if (gameScore == 0) {
+            GameObject.Find("Score Text").GetComponent<Text>().text = "No Kills Yet";
+        } else if (gameScore == 1) {
+            GameObject.Find("Score Text").GetComponent<Text>().text = "1 Point";
         } else {
-            GameObject.Find("Score Text").GetComponent<Text>().text = killCount + " Kills";
+            GameObject.Find("Score Text").GetComponent<Text>().text = gameScore + " Points";
         }
     }
 
