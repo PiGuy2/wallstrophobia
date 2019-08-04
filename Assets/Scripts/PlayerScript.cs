@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerScript : MonoBehaviour {
     public float moveSpeed = 0.3f;
@@ -164,6 +165,14 @@ public class PlayerScript : MonoBehaviour {
         }
 
         highlight.localPosition = new Vector2(0.1535f, -0.463f) + Vector2.Scale(facing, gridSpace);
+
+        if (killCount == 0) {
+            GameObject.Find("Score Text").GetComponent<Text>().text = "No Kills";
+        } else if (killCount == 1) {
+            GameObject.Find("Score Text").GetComponent<Text>().text = "1 Kill";
+        } else {
+            GameObject.Find("Score Text").GetComponent<Text>().text = killCount + " Kills";
+        }
     }
 
     void OnCollisionEnter2D (Collision2D collision) {
