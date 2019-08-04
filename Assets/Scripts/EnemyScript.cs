@@ -38,18 +38,24 @@ public class EnemyScript : MonoBehaviour {
                         GameObject wall = playerScript.walls[i];
                         if (playerScript.CoordinatesToGridLocation(wall.transform.position) == new Vector2Int(x, y)) {
                             playerScript.walls.Remove(wall);
-                            wall.GetComponent<DetonateScript>().TriggerDetonate();
+                            GameObject.Destroy(wall);
                         }
                     }
                     for (int i = playerScript.enemies.Count - 1; i >= 0; i--) {
                         EnemyScript enemy = playerScript.enemies[i];
                         if (enemy.GetEnemyLocation() == new Vector2Int(x, y)) {
                             playerScript.enemies.Remove(enemy);
-                            enemy.gameObject.GetComponent<DetonateScript>().TriggerDetonate();
+                            if (enemy != this) {
+                                GameObject.Destroy(enemy.gameObject);
+                            }
                         }
+                    }
+                    if (playerScript.GetPlayerLocation() == new Vector2Int(x, y)) {
+                        playerScript.TriggerDeath();
                     }
                 }
             }
+            GetComponent<DetonateScript>().TriggerDetonate();
         }
     }
 
@@ -74,14 +80,14 @@ public class EnemyScript : MonoBehaviour {
         float xDist = Mathf.Abs(moveDirection.x);
         float yDist = Mathf.Abs(moveDirection.y);
 
+        if (fuseLit) {
+            fuseLength--;
+            return;
+        }
         if (canExplode && moveDirection.sqrMagnitude <= 2) {
             fuseLit = true;
             GetComponent<Animator>().SetBool("Fused", true);
             return;
-        }
-
-        if (fuseLit) {
-            fuseLength--;
         }
 
         List<Vector2Int> walls = GetNearbyWalls();

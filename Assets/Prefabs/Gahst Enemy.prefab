@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: -6420187808842428982}
   - component: {fileID: -371075730357725473}
   - component: {fileID: 5833931346959305584}
-  - component: {fileID: -7218814477989840816}
   m_Layer: 0
   m_Name: Gahst Enemy
   m_TagString: Untagged
@@ -166,15 +165,3 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &-7218814477989840816
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6958556415357383283}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b8106c28759ec03ab15ebe8acd184c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

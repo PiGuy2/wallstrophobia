@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class DetonateScript : MonoBehaviour {
     private bool detonated;
-    private float detonateTime;
-
-    public float secondsToWait = 2f;
+    private int timeLeft = 60;
     
     // Start is called before the first frame update
     void Start() {
@@ -16,15 +14,15 @@ public class DetonateScript : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         if (detonated) {
-            if (detonateTime + secondsToWait < Time.time) {
-                GameObject.Destroy(this);
+            timeLeft--;
+            if (timeLeft < 1) {
+                GameObject.Destroy(gameObject);
             }
         }
     }
 
     public void TriggerDetonate () {
-        detonated = true;
-        detonateTime = Time.time;
+        detonated = true;;
 
         GetComponent<Animator>().SetBool("Detonated", true);
     }
