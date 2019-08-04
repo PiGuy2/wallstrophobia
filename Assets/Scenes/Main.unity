@@ -244,6 +244,7 @@ MonoBehaviour:
   gridMoveTime: 0.2
   wallPrefab: {fileID: 316000075523091056, guid: 1a5b741d920851aae8d2e12b20a96041,
     type: 3}
+  wallLocations: []
 --- !u!50 &33985980
 Rigidbody2D:
   serializedVersion: 4

@@ -1,7 +1,37 @@
 fileFormatVersion: 2
 guid: 44dfd8a957a8f5d46aecff73a86c0928
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 1214299416768156786
+    second: enemygahst_0
+  - first:
+      213: 4029587894414039864
+    second: enemygahst_1
+  - first:
+      213: 32781705441954974
+    second: enemygahst_2
+  - first:
+      213: 7665110933828940062
+    second: enemygahst_3
+  - first:
+      213: -8231411143155812408
+    second: enemygahst_4
+  - first:
+      213: 2236643072000819240
+    second: enemygahst_5
+  - first:
+      213: -4959439387892434018
+    second: enemygahst_6
+  - first:
+      213: -8061049031230471854
+    second: enemygahst_7
+  - first:
+      213: -3669948918556016549
+    second: enemygahst_8
+  - first:
+      213: 2962209019146279101
+    second: enemygahst_9
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -31,7 +61,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: -1
+    filterMode: 0
     aniso: -1
     mipBias: -100
     wrapU: 1
@@ -40,7 +70,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -62,7 +92,29 @@ TextureImporter:
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
-    textureFormat: -1
+    textureFormat: 4
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: 4
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
@@ -71,7 +123,217 @@ TextureImporter:
     androidETC2FallbackOverride: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: enemygahst_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 17.2
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e18fb46b530158c41911408e80119206
+      internalID: 1214299416768156786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: enemygahst_1
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 0
+        width: 17.2
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4648e10d98e80064a96b908f81cc975c
+      internalID: 4029587894414039864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: enemygahst_2
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 0
+        width: 17.2
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bb7e24eb12412684b94668718ee377d6
+      internalID: 32781705441954974
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: enemygahst_3
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 0
+        width: 17.2
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9338cf45d70f2644a7ddd849fabb45b
+      internalID: 7665110933828940062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: enemygahst_4
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 0
+        width: 17.2
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 42badf02527aa764b8fd6b0466fe9d1a
+      internalID: -8231411143155812408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: enemygahst_5
+      rect:
+        serializedVersion: 2
+        x: 85
+        y: 0
+        width: 17.2
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c7574910f38ae7541b0dff6250f463a7
+      internalID: 2236643072000819240
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: enemygahst_6
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 0
+        width: 17.2
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4aaa23b5ace4114c9d725348be8c6e5
+      internalID: -4959439387892434018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: enemygahst_7
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 0
+        width: 17.2
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f271c5af42ac9b1408001b50b36f4a69
+      internalID: -8061049031230471854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: enemygahst_8
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 0
+        width: 17.2
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fca9ebab9640f444fb4779c5db286147
+      internalID: -3669948918556016549
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: enemygahst_9
+      rect:
+        serializedVersion: 2
+        x: 153
+        y: 0
+        width: 17.2
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1760a5b9218984242b58a548bf2ba8d7
+      internalID: 2962209019146279101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
