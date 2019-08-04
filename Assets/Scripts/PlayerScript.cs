@@ -5,7 +5,9 @@ using UnityEngine;
 public class PlayerScript : MonoBehaviour {
     public float speed = 5f;
     public bool gridMove = true;
-    public Vector2 gridSize = new Vector2(2.0f, 2.0f);
+    public Vector2 gridSpace = new Vector2(2.0f, 2.0f);
+    public Vector2Int gridSize = new Vector2Int(12, 12);
+    public Vector2 gridOrigin = new Vector2(2.0f, 2.0f);
     public float gridMoveTime = 0.2f;
 
     public GameObject wallPrefab;
@@ -19,18 +21,29 @@ public class PlayerScript : MonoBehaviour {
 
     private bool collisionDetected = false;
 
+    private Transform highlight;
+
     // Start is called before the first frame update
     void Start () {
         playerRb = this.gameObject.GetComponent<Rigidbody2D>();
 
         startPos = playerRb.position;
         endPos = playerRb.position;
+
+        highlight = gameObject.transform.GetChild(0);
     }
 
     // Update is called once per frame
     void Update () {
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
+        float h = Input.GetAxisRaw("Horizontal");
+        float v = Input.GetAxisRaw("Vertical");
+        
+        float lH = Input.GetAxisRaw("Look Horizontal");
+        float lV = Input.GetAxisRaw("Look Vertical");
+
+        if ((lH == 0) ^ (lV == 0)) {
+            facing = (new Vector2(lH, lV)).normalized;
+        }
 
         if (gridMove) {
             if (collisionDetected) {
@@ -44,9 +57,9 @@ public class PlayerScript : MonoBehaviour {
                 // if (Vector2.Distance(playerRb.position, endPos) < 0.05f) {
                 //     playerRb.position = endPos;
                 // }
-            } else if (Input.GetButton("Fire")) {
-                Vector2 wallPos = playerRb.position + Vector2.Scale(facing, gridSize);
-                wallPos += new Vector2(-0.36f, 0.72f);
+            } else if (Input.GetButtonDown("Place Wall")) {
+                Vector2 wallPos = playerRb.position + Vector2.Scale(facing, gridSpace);
+                wallPos += new Vector2(-0.35f, 0.72f);
                 Instantiate(wallPrefab, wallPos, new Quaternion());
             } else if (v != 0 || h != 0) {
                 Vector2 move;
@@ -56,7 +69,7 @@ public class PlayerScript : MonoBehaviour {
                     move = new Vector2(h, 0f);
                 }
                 move.Normalize();
-                move = Vector2.Scale(move, gridSize);
+                move = Vector2.Scale(move, gridSpace);
 
                 startPos = playerRb.position;
                 endPos = startPos + move;
@@ -68,9 +81,18 @@ public class PlayerScript : MonoBehaviour {
         } else {
             playerRb.velocity = new Vector2(h * speed, v * speed);
         }
+
+        highlight.localPosition = new Vector2(0.005f, -0.4f) + Vector2.Scale(facing, gridSpace);
     }
 
     void OnCollisionEnter2D (Collision2D collision) {
         collisionDetected = true;
+    }
+
+    Vector2Int GetPlayerLocation() {
+        Vector2 scaleFactor = new Vector2(1f / gridSpace.x, 1f / gridSpace.y);
+        Vector2 pos = Vector2.Scale(gameObject.transform.position, scaleFactor);
+        pos -= Vector2.Scale(gridOrigin, scaleFactor);
+        return Vector2Int.RoundToInt(pos);
     }
 }

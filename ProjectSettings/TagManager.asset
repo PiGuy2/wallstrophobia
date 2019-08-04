@@ -47,6 +47,9 @@ TagManager:
   - name: Entities
     uniqueID: 3732414697
     locked: 0
-  - name: Walls
+  - name: Wall
     uniqueID: 1049294073
+    locked: 0
+  - name: Highlight
+    uniqueID: 2790378693
     locked: 0
