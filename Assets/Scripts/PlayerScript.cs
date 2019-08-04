@@ -57,6 +57,8 @@ public class PlayerScript : MonoBehaviour {
         enemies = new List<EnemyScript>();
 
         gameScore = 0;
+
+        audioScript.PlaySpawn();
     }
 
     // Update is called once per frame
@@ -185,6 +187,8 @@ public class PlayerScript : MonoBehaviour {
                 }
             }
 
+            audioScript.PlayWall();
+
             turn = true;
         } else if (v != 0 || h != 0) {
             // If player is starting a motion
@@ -200,6 +204,8 @@ public class PlayerScript : MonoBehaviour {
             startPos = playerRb.position;
             endPos = startPos + move;
             facing = Vector2Int.CeilToInt((endPos - startPos).normalized);
+
+            audioScript.PlayMove();
         } else {
             // Do nothing
         }
@@ -231,6 +237,10 @@ public class PlayerScript : MonoBehaviour {
         playerAnimator.SetBool("Death", true);
         deathTime = Time.time;
         death = true;
+
+        highlight.gameObject.SetActive(false);
+
+        audioScript.PlayDeath();
     }
 
     public Vector2Int GetPlayerLocation () {

@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DetonateScript : MonoBehaviour {
+    private AudioScript audioScript;
+
     private bool detonated;
     private int timeLeft = 60;
     
     // Start is called before the first frame update
     void Start() {
-        
+        audioScript = GameObject.Find("Audio Source").GetComponent<AudioScript>();
     }
 
     // Update is called once per frame
@@ -22,7 +24,9 @@ public class DetonateScript : MonoBehaviour {
     }
 
     public void TriggerDetonate () {
-        detonated = true;;
+        detonated = true;
+
+        audioScript.PlayDetonate();
 
         GetComponent<Animator>().SetBool("Detonated", true);
     }
