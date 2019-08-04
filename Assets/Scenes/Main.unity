@@ -217,7 +217,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 33985975}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.91, y: 1.458, z: 0}
+  m_LocalPosition: {x: 0.955, y: 1.45, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2099763247}
@@ -238,8 +238,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridMove: 1
   gridSpace: {x: 2, y: 2}
-  gridSize: {x: 12, y: 12}
-  gridOrigin: {x: -12.06, y: -12.12}
+  gridSize: {x: 26, y: 13}
+  gridOrigin: {x: -26, y: -14.12}
   gridMoveTime: 0.2
   wallPrefab: {fileID: 316000075523091056, guid: 1a5b741d920851aae8d2e12b20a96041,
     type: 3}
@@ -476,15 +476,12 @@ EdgeCollider2D:
   m_Offset: {x: 0, y: 0}
   m_EdgeRadius: 0
   m_Points:
-  - {x: 12.123606, y: 11.768036}
-  - {x: 12.12657, y: -12.081585}
-  - {x: -12.083561, y: -12.058508}
-  - {x: -12.078799, y: 11.919056}
-  - {x: -12.087254, y: 12.129563}
-  - {x: -12.171941, y: 12.277767}
-  - {x: -12.003033, y: 12.096031}
-  - {x: 12.177967, y: 12.204628}
-  - {x: 12.177967, y: 11.785873}
+  - {x: -25.958706, y: 12.265049}
+  - {x: -25.982475, y: 12.120584}
+  - {x: -26.024307, y: -14.070555}
+  - {x: 26.230534, y: -14.079842}
+  - {x: 26.240557, y: 12.055826}
+  - {x: -25.966314, y: 12.191858}
 --- !u!95 &1883053337
 Animator:
   serializedVersion: 3

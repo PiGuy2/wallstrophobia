@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerScript : MonoBehaviour {
-    private float speed = 5f;
-    public bool gridMove = true;
+    public float moveSpeed = 0.3f;
     public Vector2 gridSpace = new Vector2(2.0f, 2.0f);
     public Vector2Int gridSize = new Vector2Int(12, 12);
     public Vector2 gridOrigin = new Vector2(2.0f, 2.0f);
@@ -72,100 +71,96 @@ public class PlayerScript : MonoBehaviour {
         }
 
         bool turn = false;
-        if (gridMove) {
-            if (enemyTurn) {
-                if (enemyTurnStep == 0) {
-                    foreach (EnemyScript enemy in enemies) {
-                        enemy.DoMove();
+        if (enemyTurn) {
+            if (enemyTurnStep == 0) {
+                foreach (EnemyScript enemy in enemies) {
+                    enemy.DoMove();
+                }
+                enemyTurnStep++;
+            } else if (enemyTurnStep == 1) {
+                // Check if enemies are done
+                bool allDone = true;
+                foreach (EnemyScript enemy in enemies) {
+                    if (enemy.busy) {
+                        allDone = false;
+                        break;
                     }
+                }
+                if (allDone) {
                     enemyTurnStep++;
-                } else if (enemyTurnStep == 1) {
-                    // Check if enemies are done
-                    bool allDone = true;
-                    foreach (EnemyScript enemy in enemies) {
-                        if (enemy.busy) {
-                            allDone = false;
-                            break;
-                        }
-                    }
-                    if (allDone) {
-                        enemyTurnStep++;
-                    }
-                } else {
-                    // Spawn a new enemy
-                    if (Random.Range(0, 4) == 0) {
-                        List<Vector2Int> spawnLocations = new List<Vector2Int>();
-                        Vector2Int playerLoc = GetPlayerLocation();
-                        for (int x = 0; x < gridSize.x; x++) {
-                            for (int y = 0; y < gridSize.y; y++) {
-                                if (Mathf.Abs(x - playerLoc.x) + Mathf.Abs(y - playerLoc.y) > 2) {
-                                    if (!wallLocations.Contains(new Vector2Int(x, y))) {
-                                        spawnLocations.Add(new Vector2Int(x, y));
-                                    }
+                }
+            } else {
+                // Spawn a new enemy
+                if (Random.Range(0, 3) == 0) {
+                    List<Vector2Int> spawnLocations = new List<Vector2Int>();
+                    Vector2Int playerLoc = GetPlayerLocation();
+                    for (int x = 0; x < gridSize.x; x++) {
+                        for (int y = 0; y < gridSize.y; y++) {
+                            if (Mathf.Abs(x - playerLoc.x) + Mathf.Abs(y - playerLoc.y) > 2) {
+                                if (!wallLocations.Contains(new Vector2Int(x, y))) {
+                                    spawnLocations.Add(new Vector2Int(x, y));
                                 }
                             }
                         }
-                        Vector2Int enemyLocation = spawnLocations[Random.Range(0, spawnLocations.Count)];
-                        Vector2 enemyPos = GridLocationToCoordinates(enemyLocation) + new Vector2(1.1f, 1.12f);
-                        
-                        EnemyScript newEnemy = Instantiate(basicEnemyPrefab, enemyPos, new Quaternion()).GetComponent<EnemyScript>();
-                        newEnemy.SetPS(this);
-                        enemies.Add(newEnemy);
                     }
-                    enemyTurnStep = 0;
-                    enemyTurn = false;
+                    Vector2Int enemyLocation = spawnLocations[Random.Range(0, spawnLocations.Count)];
+                    Vector2 enemyPos = GridLocationToCoordinates(enemyLocation) + new Vector2(1.1f, 1.12f);
+                    
+                    EnemyScript newEnemy = Instantiate(basicEnemyPrefab, enemyPos, new Quaternion()).GetComponent<EnemyScript>();
+                    newEnemy.SetPS(this);
+                    enemies.Add(newEnemy);
                 }
-            } else if (collisionDetected) {
-                // If player ran into a wall
-                endPos = startPos;
-                collisionDetected = false;
-            } else if (playerRb.position != endPos) {
-                // If player is moving
-                playerRb.position = Vector2.MoveTowards(playerRb.position, endPos, 0.2f);
-                if (playerRb.position == endPos) {
-                    turn = true;
-                }
-            } else if (Input.GetButtonDown("Place Wall") && highlight.gameObject.activeSelf) {
-                // If player is placing wall
-                Vector2Int wallLoc = GetPlayerLocation() + facing;
-                wallLocations.Add(wallLoc);
-                Vector2 wallPos = GridLocationToCoordinates(wallLoc);
-                wallPos += new Vector2(0.84f, 2.4f);
-                Instantiate(wallPrefab, wallPos, new Quaternion());
-
-                for (int i = enemies.Count - 1; i >= 0; i--) {
-                    EnemyScript enemy = enemies[i];
-                    if (enemy.GetEnemyLocation() == wallLoc) {
-                        enemies.Remove(enemy);
-                        GameObject.Destroy(enemy.gameObject);
-                        killCount += 1;
-                    }
-                }
-
+                enemyTurnStep = 0;
+                enemyTurn = false;
+            }
+        } else if (collisionDetected) {
+            // If player ran into a wall
+            endPos = startPos;
+            collisionDetected = false;
+        } else if (playerRb.position != endPos) {
+            // If player is moving
+            playerRb.position = Vector2.MoveTowards(playerRb.position, endPos, moveSpeed);
+            if (playerRb.position == endPos) {
                 turn = true;
-            } else if (v != 0 || h != 0) {
-                // If player is starting a motion
-                Vector2 move;
-                if (v != 0) {
-                    move = new Vector2(0f, v);
-                } else {
-                    move = new Vector2(h, 0f);
+            }
+        } else if (Input.GetButtonDown("Place Wall") && highlight.gameObject.activeSelf) {
+            // If player is placing wall
+            Vector2Int wallLoc = GetPlayerLocation() + facing;
+            wallLocations.Add(wallLoc);
+            Vector2 wallPos = GridLocationToCoordinates(wallLoc);
+            wallPos += new Vector2(0.84f, 2.4f);
+            Instantiate(wallPrefab, wallPos, new Quaternion());
+
+            for (int i = enemies.Count - 1; i >= 0; i--) {
+                EnemyScript enemy = enemies[i];
+                if (enemy.GetEnemyLocation() == wallLoc) {
+                    enemies.Remove(enemy);
+                    GameObject.Destroy(enemy.gameObject);
+                    killCount += 1;
                 }
-                move.Normalize();
-                move = Vector2.Scale(move, gridSpace);
+            }
 
-                startPos = playerRb.position;
-                endPos = startPos + move;
-                facing = Vector2Int.CeilToInt((endPos - startPos).normalized);
+            turn = true;
+        } else if (v != 0 || h != 0) {
+            // If player is starting a motion
+            Vector2 move;
+            if (v != 0) {
+                move = new Vector2(0f, v);
             } else {
-                // Do nothing
+                move = new Vector2(h, 0f);
             }
+            move.Normalize();
+            move = Vector2.Scale(move, gridSpace);
 
-            if (turn) {
-                enemyTurn = true;
-            }
+            startPos = playerRb.position;
+            endPos = startPos + move;
+            facing = Vector2Int.CeilToInt((endPos - startPos).normalized);
         } else {
-            playerRb.velocity = new Vector2(h * speed, v * speed);
+            // Do nothing
+        }
+
+        if (turn) {
+            enemyTurn = true;
         }
 
         highlight.localPosition = new Vector2(0.1535f, -0.463f) + Vector2.Scale(facing, gridSpace);
@@ -190,5 +185,11 @@ public class PlayerScript : MonoBehaviour {
         Vector2 pos = Vector2.Scale(loc, gridSpace);
         pos += gridOrigin;
         return pos;
+    }
+
+    void OnDrawGizmos () {
+        Gizmos.color = new Color(1, 0, 0, 0.5f);
+        float size = 0.2f;
+        Gizmos.DrawCube(gridOrigin, new Vector3(size, size, size));
     }
 }
