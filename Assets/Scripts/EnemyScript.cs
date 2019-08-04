@@ -38,14 +38,14 @@ public class EnemyScript : MonoBehaviour {
                         GameObject wall = playerScript.walls[i];
                         if (playerScript.CoordinatesToGridLocation(wall.transform.position) == new Vector2Int(x, y)) {
                             playerScript.walls.Remove(wall);
-                            GameObject.Destroy(wall);
+                            wall.GetComponent<DetonateScript>().TriggerDetonate();
                         }
                     }
                     for (int i = playerScript.enemies.Count - 1; i >= 0; i--) {
                         EnemyScript enemy = playerScript.enemies[i];
                         if (enemy.GetEnemyLocation() == new Vector2Int(x, y)) {
                             playerScript.enemies.Remove(enemy);
-                            GameObject.Destroy(enemy.gameObject);
+                            enemy.gameObject.GetComponent<DetonateScript>().TriggerDetonate();
                         }
                     }
                 }

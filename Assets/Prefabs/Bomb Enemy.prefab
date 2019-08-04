@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3607965931104467529}
   - component: {fileID: 7939094372527923548}
   - component: {fileID: 4900674458858077427}
+  - component: {fileID: -2517479461159197191}
   m_Layer: 0
   m_Name: Bomb Enemy
   m_TagString: Untagged
@@ -101,7 +102,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.415, y: 0.44}
+    oldSize: {x: 3.1055555, y: 3.1}
     newSize: {x: 0.255, y: 0.3}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -165,3 +166,15 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-2517479461159197191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8387174627770779120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b8106c28759ec03ab15ebe8acd184c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

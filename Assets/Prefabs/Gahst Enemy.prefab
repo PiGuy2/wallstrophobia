@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: -6420187808842428982}
   - component: {fileID: -371075730357725473}
   - component: {fileID: 5833931346959305584}
+  - component: {fileID: -7218814477989840816}
   m_Layer: 0
   m_Name: Gahst Enemy
   m_TagString: Untagged
@@ -101,7 +102,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.5636364, y: 2.8181818}
+    oldSize: {x: 1.5636364, y: 2.090909}
     newSize: {x: 0.255, y: 0.3}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -145,6 +146,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   busy: 0
   canGoThroughWalls: 1
+  canExplode: 0
 --- !u!95 &5833931346959305584
 Animator:
   serializedVersion: 3
@@ -164,3 +166,15 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-7218814477989840816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6958556415357383283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b8106c28759ec03ab15ebe8acd184c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
