@@ -11,10 +11,10 @@ public class PlayerScript : MonoBehaviour {
     public float gridMoveTime = 0.2f;
 
     public GameObject wallPrefab;
-
     public GameObject basicEnemyPrefab;
     
     private Rigidbody2D playerRb;
+    private Animator playerAnimator;
 
     private Vector2 startPos;
     private Vector2 endPos;
@@ -22,6 +22,7 @@ public class PlayerScript : MonoBehaviour {
     private Vector2Int facing = new Vector2Int(1, 0);
 
     private bool collisionDetected = false;
+    private bool death = false;
 
     private bool enemyTurn = false;
     private int enemyTurnStep = 0;
@@ -36,6 +37,7 @@ public class PlayerScript : MonoBehaviour {
     // Start is called before the first frame update
     void Start () {
         playerRb = this.gameObject.GetComponent<Rigidbody2D>();
+        playerAnimator = this.gameObject.GetComponent<Animator>();
 
         startPos = playerRb.position;
         endPos = playerRb.position;
@@ -72,7 +74,9 @@ public class PlayerScript : MonoBehaviour {
         }
 
         bool turn = false;
-        if (enemyTurn) {
+        if (death) {
+            // Wait
+        } else if (enemyTurn) {
             if (enemyTurnStep == 0) {
                 foreach (EnemyScript enemy in enemies) {
                     enemy.DoMove();
@@ -177,6 +181,12 @@ public class PlayerScript : MonoBehaviour {
 
     void OnCollisionEnter2D (Collision2D collision) {
         collisionDetected = true;
+    }
+
+    void OnTriggerEnter2D (Collider2D trigger) {
+        playerAnimator.SetBool("death", true);
+        Invoke("SceneManager.LoadScene(\"Main\")", 5);
+        death = true;
     }
 
     public Vector2Int GetPlayerLocation () {
