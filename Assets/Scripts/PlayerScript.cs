@@ -60,6 +60,8 @@ public class PlayerScript : MonoBehaviour {
         float lH = Input.GetAxisRaw("Look Horizontal");
         float lV = Input.GetAxisRaw("Look Vertical");
 
+        GetComponent<SpriteRenderer>().sortingLayerID = GetSortingLayer(GetPlayerLocation().y);
+
         // Change which direction character is looking
         if ((lH == 0) ^ (lV == 0)) {
             facing = Vector2Int.CeilToInt((new Vector2(lH, lV)).normalized);
@@ -76,7 +78,9 @@ public class PlayerScript : MonoBehaviour {
         }
 
         bool turn = false;
-        if (death) {
+        if (Input.GetKeyDown("r")) {
+            SceneManager.LoadScene("Main");
+        } else if (death) {
             if (Time.time > deathTime + 5) {
                 SceneManager.LoadScene("Main");
             }
@@ -138,7 +142,7 @@ public class PlayerScript : MonoBehaviour {
             wallLocations.Add(wallLoc);
             Vector2 wallPos = GridLocationToCoordinates(wallLoc);
             wallPos += new Vector2(0.84f, 2.4f);
-            Instantiate(wallPrefab, wallPos, new Quaternion());
+            Instantiate(wallPrefab, wallPos, new Quaternion()).GetComponent<SpriteRenderer>().sortingLayerID = GetSortingLayer(wallLoc.y);
 
             for (int i = enemies.Count - 1; i >= 0; i--) {
                 EnemyScript enemy = enemies[i];
@@ -208,6 +212,10 @@ public class PlayerScript : MonoBehaviour {
         Vector2 pos = Vector2.Scale(loc, gridSpace);
         pos += gridOrigin;
         return pos;
+    }
+
+    public int GetSortingLayer (int row) {
+        return SortingLayer.NameToID("Row " + row);
     }
 
     void OnDrawGizmos () {

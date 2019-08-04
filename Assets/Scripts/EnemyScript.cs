@@ -47,6 +47,12 @@ public class EnemyScript : MonoBehaviour {
             if (walls.Contains(current)) {
                 continue;
             }
+            Vector2Int newLoc = GetEnemyLocation() + current;
+            Vector2Int newLocClamped = newLoc;
+            newLocClamped.Clamp(new Vector2Int(0, 0), playerScript.gridSize - new Vector2Int(1, 1));
+            if (newLoc != newLocClamped) {
+                continue;
+            }
             if ((moveDirection - current).sqrMagnitude < moveDirection.sqrMagnitude) {
                 currentScore = 3;
             } else if ((xDist == 0 && current.y == 0) || (yDist == 0 && current.x == 0)) {
