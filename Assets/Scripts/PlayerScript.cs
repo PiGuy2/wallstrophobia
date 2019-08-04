@@ -45,6 +45,15 @@ public class PlayerScript : MonoBehaviour {
             facing = (new Vector2(lH, lV)).normalized;
         }
 
+        Vector2Int facingLoc = CoordinatesToGridLocation(playerRb.position + Vector2.Scale(facing, gridSpace));
+        Vector2Int facingLocClamped = facingLoc;
+        facingLocClamped.Clamp(new Vector2Int(0, 0), gridSize - new Vector2Int(1, 1));
+        if (facingLoc != facingLocClamped) {
+            highlight.gameObject.SetActive(false);
+        } else {
+            highlight.gameObject.SetActive(true);
+        }
+
         if (gridMove) {
             if (collisionDetected) {
                 endPos = startPos;
@@ -57,7 +66,7 @@ public class PlayerScript : MonoBehaviour {
                 // if (Vector2.Distance(playerRb.position, endPos) < 0.05f) {
                 //     playerRb.position = endPos;
                 // }
-            } else if (Input.GetButtonDown("Place Wall")) {
+            } else if (Input.GetButtonDown("Place Wall") && highlight.gameObject.activeSelf) {
                 Vector2 wallPos = playerRb.position + Vector2.Scale(facing, gridSpace);
                 wallPos += new Vector2(-0.35f, 0.72f);
                 Instantiate(wallPrefab, wallPos, new Quaternion());
@@ -82,16 +91,20 @@ public class PlayerScript : MonoBehaviour {
             playerRb.velocity = new Vector2(h * speed, v * speed);
         }
 
-        highlight.localPosition = new Vector2(0.005f, -0.4f) + Vector2.Scale(facing, gridSpace);
+        highlight.localPosition = new Vector2(0.1535f, -0.463f) + Vector2.Scale(facing, gridSpace);
     }
 
     void OnCollisionEnter2D (Collision2D collision) {
         collisionDetected = true;
     }
 
-    Vector2Int GetPlayerLocation() {
+    Vector2Int GetPlayerLocation () {
+        return CoordinatesToGridLocation(gameObject.transform.position);
+    }
+
+    Vector2Int CoordinatesToGridLocation (Vector2 coords) {
         Vector2 scaleFactor = new Vector2(1f / gridSpace.x, 1f / gridSpace.y);
-        Vector2 pos = Vector2.Scale(gameObject.transform.position, scaleFactor);
+        Vector2 pos = Vector2.Scale(coords, scaleFactor);
         pos -= Vector2.Scale(gridOrigin, scaleFactor);
         return Vector2Int.RoundToInt(pos);
     }
