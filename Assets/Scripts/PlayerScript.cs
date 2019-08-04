@@ -184,7 +184,7 @@ public class PlayerScript : MonoBehaviour {
     }
 
     void OnTriggerEnter2D (Collider2D trigger) {
-        playerAnimator.SetBool("death", true);
+        playerAnimator.SetBool("Death", true);
         Invoke("SceneManager.LoadScene(\"Main\")", 5);
         death = true;
     }
