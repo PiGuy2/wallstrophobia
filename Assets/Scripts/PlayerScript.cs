@@ -17,12 +17,14 @@ public class PlayerScript : MonoBehaviour {
     private Vector2 startPos;
     private Vector2 endPos;
     private Vector2 velocity;
-    private Vector2 facing = new Vector2(1, 0);
+    private Vector2Int facing = new Vector2Int(1, 0);
 
     private bool collisionDetected = false;
     private bool enemyTurn = false;
 
     private Transform highlight;
+
+    public List<Vector2Int> wallLocations;
 
     // Start is called before the first frame update
     void Start () {
@@ -32,6 +34,8 @@ public class PlayerScript : MonoBehaviour {
         endPos = playerRb.position;
 
         highlight = gameObject.transform.GetChild(0);
+
+        wallLocations = new List<Vector2Int>();
     }
 
     // Update is called once per frame
@@ -44,7 +48,7 @@ public class PlayerScript : MonoBehaviour {
 
         // Change which direction character is looking
         if ((lH == 0) ^ (lV == 0)) {
-            facing = (new Vector2(lH, lV)).normalized;
+            facing = Vector2Int.CeilToInt((new Vector2(lH, lV)).normalized);
         }
 
         // See if square character is looking at is in the grid
@@ -72,8 +76,10 @@ public class PlayerScript : MonoBehaviour {
                 playerRb.position = Vector2.MoveTowards(playerRb.position, endPos, 0.2f);
             } else if (Input.GetButtonDown("Place Wall") && highlight.gameObject.activeSelf) {
                 // If player is placing wall
-                Vector2 wallPos = playerRb.position + Vector2.Scale(facing, gridSpace);
-                wallPos += new Vector2(-0.11f, 0.72f);
+                Vector2Int wallLoc = GetPlayerLocation() + facing;
+                wallLocations.Add(wallLoc);
+                Vector2 wallPos = Vector2.Scale(wallLoc, gridSpace);
+                wallPos += new Vector2(-0.11f, 0.72f) + gridOrigin;
                 Instantiate(wallPrefab, wallPos, new Quaternion());
                 turn = true;
             } else if (v != 0 || h != 0) {
@@ -89,7 +95,7 @@ public class PlayerScript : MonoBehaviour {
 
                 startPos = playerRb.position;
                 endPos = startPos + move;
-                facing = (endPos - startPos).normalized;
+                facing = Vector2Int.CeilToInt((endPos - startPos).normalized);
                 turn = true;
             } else {
                 // Do nothing
