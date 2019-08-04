@@ -20,6 +20,7 @@ public class PlayerScript : MonoBehaviour {
     private Vector2 facing = new Vector2(1, 0);
 
     private bool collisionDetected = false;
+    private bool enemyTurn = false;
 
     private Transform highlight;
 
@@ -41,10 +42,12 @@ public class PlayerScript : MonoBehaviour {
         float lH = Input.GetAxisRaw("Look Horizontal");
         float lV = Input.GetAxisRaw("Look Vertical");
 
+        // Change which direction character is looking
         if ((lH == 0) ^ (lV == 0)) {
             facing = (new Vector2(lH, lV)).normalized;
         }
 
+        // See if square character is looking at is in the grid
         Vector2Int facingLoc = CoordinatesToGridLocation(playerRb.position + Vector2.Scale(facing, gridSpace));
         Vector2Int facingLocClamped = facingLoc;
         facingLocClamped.Clamp(new Vector2Int(0, 0), gridSize - new Vector2Int(1, 1));
@@ -54,23 +57,27 @@ public class PlayerScript : MonoBehaviour {
             highlight.gameObject.SetActive(true);
         }
 
+        bool turn = false;
         if (gridMove) {
-            if (collisionDetected) {
+            if (enemyTurn) {
+                Debug.Log("Enemy Turn");
+                enemyTurn = false;
+            } else if (collisionDetected) {
+                // If player ran into a wall
                 endPos = startPos;
                 collisionDetected = false;
             }
             if (playerRb.position != endPos) {
-                // Vector2.SmoothDamp(playerRb.position, endPos, ref velocity, gridMoveTime);
-                // playerRb.velocity = velocity;
+                // If player is moving
                 playerRb.position = Vector2.MoveTowards(playerRb.position, endPos, 0.2f);
-                // if (Vector2.Distance(playerRb.position, endPos) < 0.05f) {
-                //     playerRb.position = endPos;
-                // }
             } else if (Input.GetButtonDown("Place Wall") && highlight.gameObject.activeSelf) {
+                // If player is placing wall
                 Vector2 wallPos = playerRb.position + Vector2.Scale(facing, gridSpace);
-                wallPos += new Vector2(-0.35f, 0.72f);
+                wallPos += new Vector2(-0.11f, 0.72f);
                 Instantiate(wallPrefab, wallPos, new Quaternion());
+                turn = true;
             } else if (v != 0 || h != 0) {
+                // If player is starting a motion
                 Vector2 move;
                 if (v != 0) {
                     move = new Vector2(0f, v);
@@ -83,9 +90,13 @@ public class PlayerScript : MonoBehaviour {
                 startPos = playerRb.position;
                 endPos = startPos + move;
                 facing = (endPos - startPos).normalized;
-                // A turn occurred
+                turn = true;
             } else {
                 // Do nothing
+            }
+
+            if (turn) {
+                enemyTurn = true;
             }
         } else {
             playerRb.velocity = new Vector2(h * speed, v * speed);
