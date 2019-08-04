@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerScript : MonoBehaviour {
-    public float speed = 5f;
+    private float speed = 5f;
     public bool gridMove = true;
     public Vector2 gridSpace = new Vector2(2.0f, 2.0f);
     public Vector2Int gridSize = new Vector2Int(12, 12);
@@ -22,11 +22,16 @@ public class PlayerScript : MonoBehaviour {
     private Vector2Int facing = new Vector2Int(1, 0);
 
     private bool collisionDetected = false;
+
     private bool enemyTurn = false;
+    private int enemyTurnStep = 0;
 
     private Transform highlight;
 
+    public int killCount;
+
     public List<Vector2Int> wallLocations;
+    public List<EnemyScript> enemies;
 
     // Start is called before the first frame update
     void Start () {
@@ -38,6 +43,9 @@ public class PlayerScript : MonoBehaviour {
         highlight = gameObject.transform.GetChild(0);
 
         wallLocations = new List<Vector2Int>();
+        enemies = new List<EnemyScript>();
+
+        killCount = 0;
     }
 
     // Update is called once per frame
@@ -66,24 +74,47 @@ public class PlayerScript : MonoBehaviour {
         bool turn = false;
         if (gridMove) {
             if (enemyTurn) {
-                if (Random.Range(0, 5) == 0) {
+                if (enemyTurnStep == 0) {
+                    foreach (EnemyScript enemy in enemies) {
+                        enemy.DoMove();
+                    }
+                    enemyTurnStep++;
+                } else if (enemyTurnStep == 1) {
+                    // Check if enemies are done
+                    bool allDone = true;
+                    foreach (EnemyScript enemy in enemies) {
+                        if (enemy.busy) {
+                            allDone = false;
+                            break;
+                        }
+                    }
+                    if (allDone) {
+                        enemyTurnStep++;
+                    }
+                } else {
                     // Spawn a new enemy
-                    List<Vector2Int> spawnLocations = new List<Vector2Int>();
-                    Vector2Int playerLoc = GetPlayerLocation();
-                    for (int x = 0; x < gridSize.x; x++) {
-                        for (int y = 0; y < gridSize.y; y++) {
-                            if (Mathf.Abs(x - playerLoc.x) + Mathf.Abs(y - playerLoc.y) > 2) {
-                                if (!wallLocations.Contains(new Vector2Int(x, y))) {
-                                    spawnLocations.Add(new Vector2Int(x, y));
+                    if (Random.Range(0, 4) == 0) {
+                        List<Vector2Int> spawnLocations = new List<Vector2Int>();
+                        Vector2Int playerLoc = GetPlayerLocation();
+                        for (int x = 0; x < gridSize.x; x++) {
+                            for (int y = 0; y < gridSize.y; y++) {
+                                if (Mathf.Abs(x - playerLoc.x) + Mathf.Abs(y - playerLoc.y) > 2) {
+                                    if (!wallLocations.Contains(new Vector2Int(x, y))) {
+                                        spawnLocations.Add(new Vector2Int(x, y));
+                                    }
                                 }
                             }
                         }
+                        Vector2Int enemyLocation = spawnLocations[Random.Range(0, spawnLocations.Count)];
+                        Vector2 enemyPos = GridLocationToCoordinates(enemyLocation) + new Vector2(1.1f, 1.12f);
+                        
+                        EnemyScript newEnemy = Instantiate(basicEnemyPrefab, enemyPos, new Quaternion()).GetComponent<EnemyScript>();
+                        newEnemy.SetPS(this);
+                        enemies.Add(newEnemy);
                     }
-                    Vector2Int enemyLocation = spawnLocations[Random.Range(0, spawnLocations.Count)];
-                    Vector2 enemyPos = GridLocationToCoordinates(enemyLocation) + new Vector2(1.1f, 1.12f);
-                    Instantiate(basicEnemyPrefab, enemyPos, new Quaternion());
+                    enemyTurnStep = 0;
+                    enemyTurn = false;
                 }
-                enemyTurn = false;
             } else if (collisionDetected) {
                 // If player ran into a wall
                 endPos = startPos;
@@ -91,6 +122,9 @@ public class PlayerScript : MonoBehaviour {
             } else if (playerRb.position != endPos) {
                 // If player is moving
                 playerRb.position = Vector2.MoveTowards(playerRb.position, endPos, 0.2f);
+                if (playerRb.position == endPos) {
+                    turn = true;
+                }
             } else if (Input.GetButtonDown("Place Wall") && highlight.gameObject.activeSelf) {
                 // If player is placing wall
                 Vector2Int wallLoc = GetPlayerLocation() + facing;
@@ -98,6 +132,16 @@ public class PlayerScript : MonoBehaviour {
                 Vector2 wallPos = GridLocationToCoordinates(wallLoc);
                 wallPos += new Vector2(0.84f, 2.4f);
                 Instantiate(wallPrefab, wallPos, new Quaternion());
+
+                for (int i = enemies.Count - 1; i >= 0; i--) {
+                    EnemyScript enemy = enemies[i];
+                    if (enemy.GetEnemyLocation() == wallLoc) {
+                        enemies.Remove(enemy);
+                        GameObject.Destroy(enemy.gameObject);
+                        killCount += 1;
+                    }
+                }
+
                 turn = true;
             } else if (v != 0 || h != 0) {
                 // If player is starting a motion
@@ -113,7 +157,6 @@ public class PlayerScript : MonoBehaviour {
                 startPos = playerRb.position;
                 endPos = startPos + move;
                 facing = Vector2Int.CeilToInt((endPos - startPos).normalized);
-                turn = true;
             } else {
                 // Do nothing
             }
@@ -132,18 +175,18 @@ public class PlayerScript : MonoBehaviour {
         collisionDetected = true;
     }
 
-    Vector2Int GetPlayerLocation () {
+    public Vector2Int GetPlayerLocation () {
         return CoordinatesToGridLocation(gameObject.transform.position - new Vector3(0, 1, 0));
     }
 
-    Vector2Int CoordinatesToGridLocation (Vector2 coords) {
+    public Vector2Int CoordinatesToGridLocation (Vector2 coords) {
         Vector2 scaleFactor = new Vector2(1f / gridSpace.x, 1f / gridSpace.y);
         Vector2 pos = Vector2.Scale(coords, scaleFactor);
         pos -= Vector2.Scale(gridOrigin, scaleFactor);
         return Vector2Int.RoundToInt(pos);
     }
 
-    Vector2 GridLocationToCoordinates (Vector2Int loc) {
+    public Vector2 GridLocationToCoordinates (Vector2Int loc) {
         Vector2 pos = Vector2.Scale(loc, gridSpace);
         pos += gridOrigin;
         return pos;
