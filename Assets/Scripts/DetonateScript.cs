@@ -22,7 +22,7 @@ public class DetonateScript : MonoBehaviour {
         }
     }
 
-    public TriggerDetonate () {
+    public void TriggerDetonate () {
         detonated = true;
         detonateTime = Time.time;
 
