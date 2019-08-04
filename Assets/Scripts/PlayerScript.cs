@@ -14,6 +14,7 @@ public class PlayerScript : MonoBehaviour {
     public GameObject wallPrefab;
     public GameObject basicEnemyPrefab;
     public GameObject gahstEnemyPrefab;
+    public GameObject bombEnemyPrefab;
     
     private Rigidbody2D playerRb;
     private Animator playerAnimator;
@@ -35,6 +36,7 @@ public class PlayerScript : MonoBehaviour {
     public int gameScore;
 
     public List<Vector2Int> wallLocations;
+    public List<GameObject> walls;
     public List<EnemyScript> enemies;
 
     private int initialSpawns = 2;
@@ -108,7 +110,7 @@ public class PlayerScript : MonoBehaviour {
             } else {
                 // Spawn a new enemy
                 // Starts at 1/4 and reaches 1/1 @ 60 kills
-                if (Random.Range(0, Mathf.Max(10, 80 - gameScore)) < 20 || initialSpawns > 0) {
+                if (Random.Range(0, Mathf.Max(10, 80 - gameScore)) < 10 || initialSpawns > 0) {
                     List<Vector2Int> spawnLocations = new List<Vector2Int>();
                     Vector2Int playerLoc = GetPlayerLocation();
                     for (int x = 0; x < gridSize.x; x++) {
@@ -125,10 +127,12 @@ public class PlayerScript : MonoBehaviour {
                     
                     EnemyScript newEnemy;
 
-                    // Starts at 1/3. Starts increasing @ 30 kills, maxes out at 1/1 @ 90 kills
-                    if (Random.Range(0, Mathf.Max(20, 90 - Mathf.Max(gameScore - 30, 0))) < 30 && gameScore > 5) {
+                    if (Random.Range(0, Mathf.Max(45, 90 - Mathf.Max(gameScore - 20, 0))) < 11 && gameScore > 5) {
+                        // Starts at 1/4. Starts increasing @ 20 kills, maxes out at 1/2 @ 65 kills
                         newEnemy = Instantiate(gahstEnemyPrefab, enemyPos, new Quaternion()).GetComponent<EnemyScript>();
-                        newEnemy.canGoThroughWalls = true;
+                    } else if (Random.Range(0, Mathf.Max(40, 100 - Mathf.Max(gameScore - 30, 0))) < 5 && gameScore > 10) {
+                        // Starts at 1/10. Starts increasing @ 30 kills, maxes out at 1/4 @ 90 kills
+                        newEnemy = Instantiate(bombEnemyPrefab, enemyPos, new Quaternion()).GetComponent<EnemyScript>();
                     } else {
                         newEnemy = Instantiate(basicEnemyPrefab, enemyPos, new Quaternion()).GetComponent<EnemyScript>();
                     }
@@ -137,8 +141,11 @@ public class PlayerScript : MonoBehaviour {
                     enemies.Add(newEnemy);
                     initialSpawns--;
                 }
-                enemyTurnStep = 0;
-                enemyTurn = false;
+                enemyTurnStep++;
+                if (enemyTurnStep > 3) {
+                    enemyTurnStep = 0;
+                    enemyTurn = false;
+                }
             }
         } else if (collisionDetected) {
             // If player ran into a wall
@@ -156,13 +163,19 @@ public class PlayerScript : MonoBehaviour {
             wallLocations.Add(wallLoc);
             Vector2 wallPos = GridLocationToCoordinates(wallLoc);
             wallPos += new Vector2(0.84f, 2.4f);
-            Instantiate(wallPrefab, wallPos, new Quaternion()).GetComponent<SpriteRenderer>().sortingLayerID = GetSortingLayer(wallLoc.y);
+            
+            GameObject wall = Instantiate(wallPrefab, wallPos, new Quaternion());
+            wall.GetComponent<SpriteRenderer>().sortingLayerID = GetSortingLayer(wallLoc.y);
+            walls.Add(wall);
 
             for (int i = enemies.Count - 1; i >= 0; i--) {
                 EnemyScript enemy = enemies[i];
                 if (enemy.GetEnemyLocation() == wallLoc) {
                     if (enemy.canGoThroughWalls) {
                         gameScore++;
+                    }
+                    if (enemy.canExplode) {
+                        gameScore += 2;
                     }
                     enemies.Remove(enemy);
                     GameObject.Destroy(enemy.gameObject);

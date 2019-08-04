@@ -5,6 +5,10 @@ using UnityEngine;
 public class EnemyScript : MonoBehaviour {
     public bool busy = false;
     public bool canGoThroughWalls = false;
+    public bool canExplode = false;
+
+    private bool fuseLit = false;
+    private int fuseLength = 1;
 
     private PlayerScript playerScript;
     private Rigidbody2D enemyRb;
@@ -18,7 +22,36 @@ public class EnemyScript : MonoBehaviour {
         endPos = enemyRb.position;
     }
 
-    // Update is called once per frame
+    void LateUpdate () {
+        if (fuseLength == 0) {
+            Vector2Int loc = GetEnemyLocation();
+            for (int x = loc.x - 1; x <= loc.x + 1; x++) {
+                for (int y = loc.y - 1; y <= loc.y + 1; y++) {
+                    for (int i = playerScript.wallLocations.Count - 1; i >= 0; i--) {
+                        Vector2Int wallLoc = playerScript.wallLocations[i];
+                        if (wallLoc == new Vector2Int(x, y)) {
+                            playerScript.wallLocations.Remove(wallLoc);
+                        }
+                    }
+                    for (int i = playerScript.walls.Count - 1; i >= 0; i--) {
+                        GameObject wall = playerScript.walls[i];
+                        if (playerScript.CoordinatesToGridLocation(wall.transform.position) == new Vector2Int(x, y)) {
+                            playerScript.walls.Remove(wall);
+                            GameObject.Destroy(wall);
+                        }
+                    }
+                    for (int i = playerScript.enemies.Count - 1; i >= 0; i--) {
+                        EnemyScript enemy = playerScript.enemies[i];
+                        if (enemy.GetEnemyLocation() == new Vector2Int(x, y)) {
+                            playerScript.enemies.Remove(enemy);
+                            GameObject.Destroy(enemy.gameObject);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     void Update () {
         if (enemyRb.position != endPos) {
             enemyRb.position = Vector2.MoveTowards(enemyRb.position, endPos, playerScript.moveSpeed);
@@ -39,6 +72,15 @@ public class EnemyScript : MonoBehaviour {
         Vector2 moveDirection = playerScript.GetPlayerLocation() - GetEnemyLocation();
         float xDist = Mathf.Abs(moveDirection.x);
         float yDist = Mathf.Abs(moveDirection.y);
+
+        if (canExplode && moveDirection.sqrMagnitude <= 2) {
+            fuseLit = true;
+            return;
+        }
+
+        if (fuseLit) {
+            fuseLength--;
+        }
 
         List<Vector2Int> walls = GetNearbyWalls();
         int highScore = 0;
