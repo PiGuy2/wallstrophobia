@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DetonateScript : MonoBehaviour {
     private bool detonated;
-    private Time detonateTime;
+    private float detonateTime;
 
     public float secondsToWait = 2f;
     
@@ -22,7 +22,7 @@ public class DetonateScript : MonoBehaviour {
         }
     }
 
-    public TriggerDetonate () {
+    public void TriggerDetonate () {
         detonated = true;
         detonateTime = Time.time;
 
