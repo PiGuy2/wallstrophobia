@@ -109,8 +109,9 @@ public class PlayerScript : MonoBehaviour {
                 }
             } else {
                 // Spawn a new enemy
-                // Starts at 1/4 and reaches 1/1 @ 60 kills
-                if (Random.Range(0, Mathf.Max(10, 80 - gameScore)) < 10 || initialSpawns > 0) {
+                // Starts at 1/3 and reaches 2/1 @ 50 kills
+                if (Random.Range(0, Mathf.Max(10, 60 - gameScore)) < 10 || initialSpawns > 0) {
+                    Debug.Log("Spawning");
                     List<Vector2Int> spawnLocations = new List<Vector2Int>();
                     Vector2Int playerLoc = GetPlayerLocation();
                     for (int x = 0; x < gridSize.x; x++) {
@@ -127,11 +128,11 @@ public class PlayerScript : MonoBehaviour {
                     
                     EnemyScript newEnemy;
 
-                    if (Random.Range(0, Mathf.Max(45, 90 - Mathf.Max(gameScore - 20, 0))) < 11 && gameScore > 5) {
-                        // Starts at 1/4. Starts increasing @ 20 kills, maxes out at 1/2 @ 65 kills
+                    if (Random.Range(0, Mathf.Max(45, 90 - Mathf.Max(gameScore - 15, 0))) < 11 && gameScore > 5) {
+                        // Starts at 1/4. Starts increasing @ 15 kills, maxes out at 1/2 @ 60 kills
                         newEnemy = Instantiate(gahstEnemyPrefab, enemyPos, new Quaternion()).GetComponent<EnemyScript>();
-                    } else if (Random.Range(0, Mathf.Max(40, 100 - Mathf.Max(gameScore - 30, 0))) < 5 && gameScore > 10) {
-                        // Starts at 1/10. Starts increasing @ 30 kills, maxes out at 1/4 @ 90 kills
+                    } else if (Random.Range(0, Mathf.Max(40, 100 - Mathf.Max(gameScore - 20, 0))) < 5 || gameScore > 1) {
+                        // Starts at 1/10. Starts increasing @ 20 kills, maxes out at 1/4 @ 80 kills
                         newEnemy = Instantiate(bombEnemyPrefab, enemyPos, new Quaternion()).GetComponent<EnemyScript>();
                     } else {
                         newEnemy = Instantiate(basicEnemyPrefab, enemyPos, new Quaternion()).GetComponent<EnemyScript>();

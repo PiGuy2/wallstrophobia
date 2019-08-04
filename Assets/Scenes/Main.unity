@@ -251,6 +251,7 @@ MonoBehaviour:
     type: 3}
   gameScore: 0
   wallLocations: []
+  walls: []
   enemies: []
 --- !u!50 &33985980
 Rigidbody2D:

@@ -24,6 +24,7 @@ public class EnemyScript : MonoBehaviour {
 
     void LateUpdate () {
         if (fuseLength == 0) {
+            GetComponent<Animator>().SetBool("Detonated", true);
             Vector2Int loc = GetEnemyLocation();
             for (int x = loc.x - 1; x <= loc.x + 1; x++) {
                 for (int y = loc.y - 1; y <= loc.y + 1; y++) {
@@ -75,6 +76,7 @@ public class EnemyScript : MonoBehaviour {
 
         if (canExplode && moveDirection.sqrMagnitude <= 2) {
             fuseLit = true;
+            GetComponent<Animator>().SetBool("Fused", true);
             return;
         }
 
