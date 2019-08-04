@@ -625,8 +625,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioSource: {fileID: 1159958486}
   spawn: {fileID: 8300000, guid: bc1fee30c32cc9e949d1a0a144fac766, type: 3}
-  death: {fileID: 8300000, guid: 4328524451da260a7bd683ebb587e6b2, type: 3}
-  move: {fileID: 8300000, guid: 6f3a8f4933787ff1ab6a5df8899ad150, type: 3}
+  death: {fileID: 8300000, guid: 6f3a8f4933787ff1ab6a5df8899ad150, type: 3}
+  move: {fileID: 8300000, guid: 4328524451da260a7bd683ebb587e6b2, type: 3}
   wall: {fileID: 8300000, guid: 9ea68621ab7cd9a608797302dca12b3a, type: 3}
   detonate: {fileID: 8300000, guid: edd5ba4576686c7f39c0605d24e2fbd3, type: 3}
 --- !u!1 &1883053333
